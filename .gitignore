@@ -33,6 +33,7 @@
 
 # LLVM files
 *.bc
+*.ll
 
 # CMake temp files
 Makefile

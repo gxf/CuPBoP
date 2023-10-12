@@ -123,49 +123,55 @@ void create_global_variable(llvm::Module *M) {
   llvm::Type *WarpArrayType = llvm::ArrayType::get(I32, 32);
   llvm::Type *VoteArrayType = llvm::ArrayType::get(I8, 32);
 
+#ifdef __NO_USE_TLS__
+  auto TLSModel = llvm::GlobalValue::NotThreadLocal;
+#else
+  auto TLSModel = llvm::GlobalValue::GeneralDynamicTLSModel;
+#endif
+
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            zero, "intra_warp_index", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            zero, "inter_warp_index", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            NULL, "block_size", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            NULL, "block_size_x", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            NULL, "block_size_y", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            NULL, "block_size_z", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            NULL, "grid_size_x", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            NULL, "grid_size_y", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            NULL, "grid_size_z", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            NULL, "block_index_x", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            NULL, "block_index_y", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   new llvm::GlobalVariable(*M, I32, false, llvm::GlobalValue::ExternalLinkage,
                            NULL, "block_index_z", NULL,
-                           llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+                           TLSModel, 0, false);
   // TLS variable used for warp-level collective operators
   new llvm::GlobalVariable(
       *M, WarpArrayType, false, llvm::GlobalValue::ExternalLinkage, NULL,
-      "warp_shfl", NULL, llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+      "warp_shfl", NULL, TLSModel, 0, false);
   auto warp_vote = new llvm::GlobalVariable(
       *M, VoteArrayType, false, llvm::GlobalValue::ExternalLinkage, NULL,
-      "warp_vote", NULL, llvm::GlobalValue::GeneralDynamicTLSModel, 0, false);
+      "warp_vote", NULL, TLSModel, 0, false);
   warp_vote->setAlignment(llvm::MaybeAlign(32));
 }
 
